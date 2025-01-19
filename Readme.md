@@ -1,0 +1,1 @@
+A practice backend project, it is a course selling app.
