@@ -1,26 +1,20 @@
-const express= require("express")
-const Router=express.Router;
+const express = require("express");
+const Router = express.Router;
 
-const courseRouter=Router();
+const courseRouter = Router();
 
-courseRouter.post("/signup",function(req,res){
+courseRouter.get("/preview", (req, res) => {
     res.json({
-        message: "signup sucess"
-    })
-})
+        message: "course preview"
+    });
+});
 
-courseRouter.post("/signin",function(req,res){
+courseRouter.post("/purchase", (req, res) => {
     res.json({
-        message: "signin sucess"
-    })
-})
+        message: "course purchase successful"
+    });
+});
 
-courseRouter.get("/CoursePurchases",function(req,res){
-    res.json({
-        message: ""
-    })
-})
-
-module.exports-{
-    courseRouter:courseRouter
-}
+module.exports = {
+    courseRouter: courseRouter
+};
