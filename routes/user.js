@@ -74,7 +74,7 @@ userRouter.post("/signin", async(req, res) => {
     }
 });
 
-userRouter.get("/coursePurchases", (req, res) => {
+userRouter.get("/coursePurchases",auth, (req, res) => {
     res.json({
         message: "Here are your course purchases"
     });

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { auth, JWT_SECRET } = require("../auth/auth");
+const { auth } = require("../auth/auth");
 const { adminModel } = require("../database/db");
 const bcrypt = require("bcrypt");
 const { z } = require("zod");
@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const express = require("express");
 
 const adminRouter = Router();
-
+JWT_SECRET="AdminSecret"
 
 adminRouter.use(express.json());
 
@@ -78,7 +78,7 @@ adminRouter.post("/signin", async (req, res) => {
     }
 });
 
-adminRouter.post("/createcourse", (req, res) => {
+adminRouter.post("/createcourse",auth, (req, res) => {
     res.json({
         message: "Here are your course purchases"
     });
