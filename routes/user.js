@@ -1,7 +1,7 @@
 const express = require("express");
 const Router = express.Router;
 const { userModel } = require("../database/db");
-const {auth,JWT_SECRET}=require("../auth/auth")
+const {user_auth_middleware,JWT_SECRET}=require("../authMiddleware/user")
 const bcrypt=require("bcrypt")
 const { z }=require("zod")
 
@@ -74,7 +74,7 @@ userRouter.post("/signin", async(req, res) => {
     }
 });
 
-userRouter.get("/coursePurchases",auth, (req, res) => {
+userRouter.get("/coursePurchases",user_auth_middleware, (req, res) => {
     res.json({
         message: "Here are your course purchases"
     });

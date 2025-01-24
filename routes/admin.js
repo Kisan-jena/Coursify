@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { auth } = require("../auth/auth");
+const { admin_auth_middleware,JWT_SECRET_ADMIN } = require("../authMiddleware/admin");
 const { adminModel } = require("../database/db");
 const bcrypt = require("bcrypt");
 const { z } = require("zod");
@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const express = require("express");
 
 const adminRouter = Router();
-JWT_SECRET="AdminSecret"
 
 adminRouter.use(express.json());
 
@@ -64,7 +63,7 @@ adminRouter.post("/signin", async (req, res) => {
   
       if (isPasswordValid) {
         
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user._id }, JWT_SECRET_ADMIN, { expiresIn: "1h" });
   
         res.status(200).json({
           message: "Login successful",
@@ -78,7 +77,7 @@ adminRouter.post("/signin", async (req, res) => {
     }
 });
 
-adminRouter.post("/createcourse",auth, (req, res) => {
+adminRouter.post("/createcourse",admin_auth_middleware, (req, res) => {
     res.json({
         message: "Here are your course purchases"
     });
