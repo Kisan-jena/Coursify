@@ -21,7 +21,8 @@ adminRouter.post("/signup", async(req, res) => {
       });
     
       const parsedDataWithSuccess = requiredBody.safeParse(req.body);
-    
+      console.log(parsedDataWithSuccess)
+
       if (!parsedDataWithSuccess.success) {
         return res.status(400).json({
           message: "Incorrect format",

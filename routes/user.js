@@ -10,6 +10,7 @@ const userRouter = Router();
 userRouter.use(express.json());
 
 userRouter.post("/signup", async(req, res) => {
+
     const requiredBody = z.object({
         firstname: z.string().min(3).max(100),
         lastname: z.string().min(3).max(100),
@@ -18,7 +19,9 @@ userRouter.post("/signup", async(req, res) => {
       });
     
       const parsedDataWithSuccess = requiredBody.safeParse(req.body);
+      
       console.log(parsedDataWithSuccess)
+
       if (!parsedDataWithSuccess.success) {
         return res.status(400).json({
           message: "Incorrect format",
