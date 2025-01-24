@@ -1,5 +1,7 @@
-const express = require("express");
-const Router = express.Router;
+const {Router}=require("express")
+           // above one line and below 2 line do same thing
+// const express = require("express");
+// const Router = express.Router;
 
 const courseRouter = Router();
 

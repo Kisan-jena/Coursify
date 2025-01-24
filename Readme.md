@@ -1,1 +1,1 @@
-A practice backend project, it is a course selling app.
+A  practice backend project (node.js,express.js,jwt,brcpt,zod,password.js,mongoDB) ; it is a course selling app.
