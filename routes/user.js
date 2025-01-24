@@ -57,14 +57,11 @@ userRouter.post("/signin", async(req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-  
       
       const isPasswordValid = await bcrypt.compare(password, user.password);
   
-      if (isPasswordValid) {
-        
+      if (isPasswordValid) {      
         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
-  
         res.status(200).json({
           message: "Login successful",
           token,
