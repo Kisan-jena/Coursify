@@ -1,10 +1,11 @@
 const { Router } = require("express");
-const { admin_auth_middleware,JWT_SECRET_ADMIN } = require("../authMiddleware/admin");
-const { adminModel } = require("../database/db");
+const { admin_auth_middleware,JWT_SECRET } = require("../authMiddleware/admin");
+const { adminModel, courseModel } = require("../database/db");
 const bcrypt = require("bcrypt");
 const { z } = require("zod");
 const jwt = require("jsonwebtoken");
 const express = require("express");
+const course = require("./course");
 
 const adminRouter = Router();
 
@@ -50,9 +51,11 @@ adminRouter.post("/signup", async(req, res) => {
 
 adminRouter.post("/signin", async (req, res) => {
     const { email, password } = req.body;
-  
+
     try {
       const user = await adminModel.findOne({ email });
+
+      console.log(user)
   
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -63,7 +66,7 @@ adminRouter.post("/signin", async (req, res) => {
   
       if (isPasswordValid) {
         
-        const token = jwt.sign({ id: user._id }, JWT_SECRET_ADMIN, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user._id }, JWT_SECRET);
   
         res.status(200).json({
           message: "Login successful",
@@ -77,28 +80,93 @@ adminRouter.post("/signin", async (req, res) => {
     }
 });
 
-adminRouter.post("/createcourse",admin_auth_middleware, (req, res) => {
-    res.json({
-        message: "Here are your course purchases"
-    });
+adminRouter.post("/createcourse",admin_auth_middleware, async(req, res) => { 
+  const {title,description,imageUrl,price}=req.body
+
+  const admin_id=req.userId
+
+  const course = await courseModel.create({
+    title,
+    description,
+    imageUrl,
+    price,
+    creator_id:admin_id
+  })
+  res.json({
+    message: "created course",
+    course:course,
+    courseId:course._id,
+  });
 });
 
-adminRouter.put("/editCourse", (req, res) => {
+adminRouter.put("/editCourse",admin_auth_middleware, async(req, res) => {
+
+  const admin_id=req.userId
+  const {course_id,title,description,imageUrl,price}=req.body
+
+  const course = await courseModel.updateOne({
+    _id:course_id,
+    creator_id:admin_id
+  },{
+    title:title,
+    description:description,
+    imageUrl:imageUrl,
+    price:price,
+  });
+
+
+  if (course) {
     res.json({
-        message: "Here are your course purchases"
+        message: " updated successfully",
+        course_id:course._id,
+        updated_course:course
     });
+} else {
+    res.status(404).json({
+        message: "course not found"
+    });
+}
+  
 });
 
-adminRouter.get("/AllCoursePreview", (req, res) => {
+adminRouter.get("/AllCoursePreview",admin_auth_middleware, async(req, res) => {
+
+  const admin_id=req.userId
+  const courses = await courseModel.find(
+    {creator_id:admin_id}
+  );
+
+  if (courses) {
     res.json({
-        message: "Here are your course purchases"
+        message: "ALL courses of ",
+        courses:courses
     });
+} else {
+    res.status(404).json({
+        message: "course of creaator  not found"
+    });
+}
 });
 
-adminRouter.delete("/deletecourse", (req, res) => {
+adminRouter.delete("/deletecourse",admin_auth_middleware, async(req, res) => {
+
+  const course_id=req.body.course_id
+  const admin_id=req.userId
+
+  const course=await courseModel.findOneAndDelete({
+    _id:course_id,
+    creator_id:admin_id
+  })
+
+  if (course) {
     res.json({
-        message: "Here are your course purchases"
+        message: "course deleted successfully"
     });
+} else {
+    res.status(404).json({
+        message: "course not found"
+    });
+}
 });
 
 module.exports = {

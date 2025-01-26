@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -11,9 +13,9 @@ app.use("/user", userRouter);
 app.use("/course", courseRouter);
 app.use("/admin", adminRouter);
 
-
+console.log(process.env.MONGO_URL)
 async function main() {
-    mongoose.connect("mongodb+srv://kisanjena40:kisanjena123@cluster0.pe5nz.mongodb.net/Coursify")
+    mongoose.connect(process.env.MONGO_URL)
     app.listen(3000);
     console.log("listening on port 3000")
 }
