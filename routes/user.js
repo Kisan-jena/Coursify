@@ -1,6 +1,6 @@
 const express = require("express");
 const Router = express.Router;
-const { userModel } = require("../database/db");
+const { userModel,purchaseModel,courseModel } = require("../database/db");
 const {user_auth_middleware,JWT_SECRET}=require("../authMiddleware/user")
 const bcrypt=require("bcrypt")
 const { z }=require("zod")
@@ -74,11 +74,34 @@ userRouter.post("/signin", async(req, res) => {
     }
 });
 
-userRouter.get("/coursePurchases",user_auth_middleware, (req, res) => {
-    res.json({
-        message: "Here are your course purchases"
-    });
+userRouter.get("/coursePurchases",user_auth_middleware, async(req, res) => {
+  const userId = req.userId;
+  const purchases = await purchaseModel.find({
+      userId: userId,
+  })
+
+  if(!purchases){
+      return res.status(404).json({
+          // Error message for no purchases found
+          message:"No purchases found",
+      });
+  }
+
+  // If purchases are found, extract the courseIds from the found purchases
+  const purchasesCourseIds = purchases.map((purchase) => purchase.courseId);
+
+  // Find all course details associated with the courseIds
+  const courseData = await courseModel.find({
+      _id: {$in:purchasesCourseIds}, 
+  });
+
+  // Send the purchases and corresponding course details back to the client
+  res.status(200).json({
+      purchases,
+      courseData,
+  });
 });
+
 
 module.exports = {
     userRouter: userRouter
