@@ -1,4 +1,4 @@
-A  practice basic backend project (node.js,express.js,jwt,brcpt,zod,password.js,mongoDB) ; it is a course selling app.
+A  practice based  backend project (node.js,express.js,jwt,brcpt,zod,password.js,mongoDB) ; it is a course selling app.
 
 # This below part is done
 - Initialize a new Node.js project  
