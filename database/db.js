@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 console.log("connect to")
-mongoose.connect("mongodb+srv://kisanjena40:kisanjena123@cluster0.pe5nz.mongodb.net/Coursify")
+mongoose.connect("")
 
 const userSchema=new Schema({
     email:{type:String,unique:true},
